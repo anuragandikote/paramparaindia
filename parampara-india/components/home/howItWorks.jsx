@@ -51,7 +51,7 @@ export default function HowItWorks() {
                 min-w-[320px]
                 bg-white rounded-2xl shadow-md hover:shadow-xl
                 transition-all duration-500
-                snap-start
+                snap-center
                 animate-fade-up
               "
                         >

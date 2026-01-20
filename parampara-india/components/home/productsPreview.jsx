@@ -50,7 +50,7 @@ export default function ProductsPreview() {
             ref={sectionRef}
             className="py-16 bg-white"
         >
-            <div className="container mx-auto px-4 md:px-8">
+            <div className="container mx-auto px-2 md:px-8">
 
                 {/* Section Heading */}
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
@@ -65,8 +65,8 @@ export default function ProductsPreview() {
                     ref={scrollRef}
                     className="
        mt-10
-    flex flex-nowrap
-    gap-3
+    grid grid-cols-2
+    gap-2
     overflow-x-auto
     snap-x snap-mandatory
     scrollbar-hide

@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import FloatingWhatsApp from "@/common/floatingWhatsappCTA";
+import FloatingVideo from "@/common/floatingVideo";
+import ChatBot from "@/common/chatbot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +36,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900`}
       >
-        <FloatingWhatsApp />
+        {/* <FloatingWhatsApp /> */}
+        <FloatingVideo />
+        <ChatBot />
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />

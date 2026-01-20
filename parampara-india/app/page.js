@@ -1,3 +1,4 @@
+import GoogleMap from "@/common/googleMaps";
 import Banner from "@/components/home/banner";
 import HowItWorks from "@/components/home/howItWorks";
 import IndustriesSection from "@/components/home/industriesSection";
@@ -11,6 +12,7 @@ export default function HomePage() {
     <section className="section">
       <Banner />
       <ProductsPreview />
+      <GoogleMap />
       <IndustriesSection />
       <HowItWorks />
       <SavingsCalculator />
