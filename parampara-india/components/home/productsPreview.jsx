@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { products } from "@/data/products";
-import ProductCard from "../productCard";
+import ProductCard from "../common/productCard";
 
 export default function ProductsPreview() {
     const scrollRef = useRef(null);

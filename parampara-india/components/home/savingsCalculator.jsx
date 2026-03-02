@@ -12,7 +12,14 @@ import {
 } from "recharts";
 import { getWhatsAppLink } from "@/common/getWhatsappLink";
 
-export default function SavingsCalculatorGraph() {
+export default function SavingsCalculatorGraph({
+    sectionId = "savings-calculator",
+    title = "Savings Calculator",
+    subtitle = "Monthly savings compared to LPG usage",
+    ctaLabel = "Get Exact Savings & Demo",
+    ctaPage = "savings",
+    model,
+}) {
     // Keep input as string to allow empty value
     const [monthlyCost, setMonthlyCost] = useState(12000);
 
@@ -34,15 +41,15 @@ export default function SavingsCalculatorGraph() {
     const savings = lpgCost - paramparaCost;
 
     return (
-        <section id="savings-calculator" className="py-20 bg-gray-50">
+        <section id={sectionId} className="py-20 bg-gray-50">
             <div className="container mx-auto px-4 md:px-8">
 
                 {/* Heading */}
                 <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 text-center">
-                    Savings Calculator
+                    {title}
                 </h2>
                 <p className="mt-3 text-center text-gray-700 max-w-2xl mx-auto">
-                    Monthly savings compared to LPG usage
+                    {subtitle}
                 </p>
 
                 {/* MAIN LAYOUT */}
@@ -119,7 +126,8 @@ export default function SavingsCalculatorGraph() {
                         {/* CTA */}
                         <a
                             href={getWhatsAppLink({
-                                page: "savings",
+                                page: ctaPage,
+                                model,
                                 monthlyCost: costNumber,
                                 savings,
                             })}
@@ -134,7 +142,7 @@ export default function SavingsCalculatorGraph() {
                                 shadow-lg
                             "
                         >
-                            Get Exact Savings & Demo
+                            {ctaLabel}
                         </a>
 
                         <p className="text-center text-sm text-gray-600">

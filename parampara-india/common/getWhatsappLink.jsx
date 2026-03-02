@@ -14,10 +14,19 @@ export const getWhatsAppLink = ({
                 "\nI visited your website and want to understand how wood gasifier stoves work.";
             break;
 
-        case "products":
-            message +=
-                "\nI’m exploring your stove models and need help choosing the right one.";
+case "products":
+            message += `
+I’m viewing your *${model}* wood gasifier stove on the website.
+
+I’d like to know:
+• Price details
+• Recommended usage capacity
+• Fuel savings vs LPG
+• Installation & demo availability
+
+Please guide me further.`;
             break;
+
 
         case "selector":
             message += `\nI cook for around ${people} people daily.\nYour website recommended the ${model} stove.\nCan you share pricing, fuel savings, and demo details?`;

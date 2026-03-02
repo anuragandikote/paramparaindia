@@ -37,9 +37,9 @@ export default function ChatBot() {
   const sendLead = async (data) => {
     try {
       const message = `📢 New Lead from Chatbot
-Name: ${data.name}
-Phone: ${data.phone}
-Interest: ${data.interest}`;
+                          Name: ${data.name}
+                          Phone: ${data.phone}
+                          Interest: ${data.interest}`;
 
       const encodedMessage = encodeURIComponent(message);
       const waLink = `https://wa.me/917019713708?text=${encodedMessage}`;
@@ -86,7 +86,7 @@ Interest: ${data.interest}`;
             setMessages([{ from: "bot", text: steps[0].bot }]);
           }
         }}
-        className="fixed bottom-24 right-5 z-50 bg-green-600 text-white px-4 py-3 rounded-full shadow-lg"
+        className="fixed bottom-4 right-5 z-50 bg-green-600 text-white px-4 py-3 rounded-full shadow-lg"
       >
         💬 AI Chat
       </button>
