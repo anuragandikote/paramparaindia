@@ -65,7 +65,7 @@ export default function ProductsPreview() {
                     ref={scrollRef}
                     className="
        mt-10
-    grid grid-cols-2
+    grid grid-cols-1
     gap-2
     overflow-x-auto
     snap-x snap-mandatory
@@ -78,7 +78,6 @@ export default function ProductsPreview() {
     /* desktop layout */
     md:grid
     md:grid-cols-3
-    lg:grid-cols-4
     md:gap-4
   "
                 >                    {products.map((product, idx) => (
