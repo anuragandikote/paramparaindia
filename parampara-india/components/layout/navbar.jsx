@@ -23,9 +23,17 @@ export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [isClient, setIsClient] = useState(false);
 
     const pathname = usePathname();
     const router = useRouter();
+
+    useEffect(() => {
+        setIsClient(true);
+        const onScroll = () => setScrolled(window.scrollY > 8);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
 
     const navigate = useCallback(
         (item) => {
@@ -48,18 +56,12 @@ export default function Navbar() {
         [pathname, router]
     );
 
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 8);
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
-
     return (
         <>
             {/* HEADER */}
             <header
                 className={`sticky top-0 z-[100] transition-all duration-300
-        ${scrolled ? "bg-white/70 backdrop-blur shadow-sm" : "bg-white"}`}
+        ${isClient && scrolled ? "bg-white/70 backdrop-blur shadow-sm" : "bg-white"}`}
             >
                 <div className="container mx-auto h-16 flex items-center justify-between px-4">
 

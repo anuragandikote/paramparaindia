@@ -4,6 +4,7 @@ import ProductDetailClient from "./ProductDetailClient";
 import Breadcrumbs from "@/components/common/breadcrumbNavigator";
 import SavingsCalculator from "@/components/home/savingsCalculator";
 import { getWhatsAppLink } from "@/common/getWhatsappLink";
+import React from "react";
 
 export const dynamicParams = false;
 
@@ -28,8 +29,9 @@ export async function generateMetadata({ params }) {
 }
 
 export default function ProductPage({ params }) {
-  const { id } = params;
+  const { id } = React.use(params);
   const product = products.find((item) => item.id === id);
+  console.log({product})
 
   if (!product) {
     return (

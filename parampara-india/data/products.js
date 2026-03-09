@@ -16,7 +16,7 @@ export const products = [
     description: "Perfect for 4–18 members. Domestic and small kitchen friendly, cast iron, 600–700°C heat.",
     image: "/images/products/W1A.webp",
     video: "/videos/all-in-one-english.mp4",
-    cta: "/products/w1",
+    cta: "/products/w1a",
     savings: "Save up to 80% on LPG",
     ytShorts: "DTO7vyJlBEE",
     category: ['domestic']
