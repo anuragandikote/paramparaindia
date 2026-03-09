@@ -35,6 +35,13 @@ export default function Banner() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4 mt-4 sm:mt-6">
             <Link
+              href="/quiz"
+              className="rounded-md text-center px-6 py-3 text-white font-semibold bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 transition-all transform hover:-translate-y-0.5"
+            >
+              🚀 Find My Perfect Stove
+            </Link>
+
+            <Link
               href="/products"
               className="rounded-md text-center px-6 py-3 text-white font-semibold bg-orange-700 hover:bg-red-600 transition-colors"
             >

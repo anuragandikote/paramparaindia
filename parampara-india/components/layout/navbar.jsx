@@ -9,6 +9,7 @@ import { useRouter, usePathname } from "next/navigation";
 
 const primaryNav = [
     { label: "Products", href: "/products" },
+    { label: "Stove Quiz", href: "/quiz" },
     { label: "How It Works", section: "how-it-works" },
     { label: "Save 80%", section: "savings-calculator" },
 ];

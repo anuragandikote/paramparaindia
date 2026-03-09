@@ -161,7 +161,7 @@ export default function ProductsPreview() {
                             </div>
 
                             {/* Feature highlights */}
-                            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <div className="text-center">
                                     <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
                                         <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
@@ -188,6 +188,42 @@ export default function ProductsPreview() {
                                     </div>
                                     <h4 className="font-semibold text-gray-900 mb-1">Cooking Tips</h4>
                                     <p className="text-sm text-gray-600">Expert recipes & hacks</p>
+                                </div>
+                                <div className="text-center">
+                                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                                        </svg>
+                                    </div>
+                                    <h4 className="font-semibold text-gray-900 mb-1">Stove Quiz</h4>
+                                    <p className="text-sm text-gray-600">Find your perfect match</p>
+                                </div>
+                            </div>
+
+                            {/* Quiz CTA Section */}
+                            <div className="mt-12 bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-8 text-center">
+                                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                                    Not sure which stove is right for you?
+                                </h3>
+                                <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                                    Take our 30-second quiz and get personalized recommendations based on your kitchen needs, cooking volume, and budget. Calculate your exact LPG savings instantly.
+                                </p>
+                                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                    <a
+                                        href="/quiz"
+                                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold rounded-full hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
+                                    >
+                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                        </svg>
+                                        Take Quiz Now
+                                    </a>
+                                    <a
+                                        href="/products"
+                                        className="inline-flex items-center px-6 py-3 bg-white border-2 border-orange-200 text-orange-700 font-semibold rounded-full hover:bg-orange-50 transition-all duration-200"
+                                    >
+                                        Browse All Models
+                                    </a>
                                 </div>
                             </div>
                         </div>
