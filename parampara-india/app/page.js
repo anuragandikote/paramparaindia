@@ -1,3 +1,5 @@
+"use client";
+
 import GoogleMap from "@/common/googleMaps";
 import Banner from "@/components/home/banner";
 import HowItWorks from "@/components/home/howItWorks";
