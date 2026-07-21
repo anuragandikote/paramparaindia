@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -42,8 +41,14 @@ const leadSchema = z.object({
 
 type LeadFormData = z.infer<typeof leadSchema>;
 
-export function LeadForm() {
+interface LeadFormProps {
+  id?: string;
+  defaultValues?: Partial<LeadFormData>;
+}
+
+export function LeadForm({ id, defaultValues }: LeadFormProps) {
   const router = useRouter();
+  const isEdit = !!id;
 
   const form = useForm<LeadFormData>({
     resolver: zodResolver(leadSchema),
@@ -54,13 +59,16 @@ export function LeadForm() {
       status: "NEW",
       source: "WEBSITE",
       assignedTo: "",
+      ...defaultValues,
     },
   });
 
   async function onSubmit(data: LeadFormData) {
     try {
-      const res = await fetch("/api/leads", {
-        method: "POST",
+      const url = isEdit ? `/api/leads/${id}` : "/api/leads";
+      const method = isEdit ? "PATCH" : "POST";
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
@@ -68,9 +76,9 @@ export function LeadForm() {
           assignedTo: data.assignedTo || undefined,
         }),
       });
-      if (!res.ok) throw new Error("Failed to create lead");
-      toast.success("Lead created");
-      router.push("/admin/leads");
+      if (!res.ok) throw new Error("Failed");
+      toast.success(isEdit ? "Lead updated" : "Lead created");
+      router.push(isEdit ? `/admin/leads/${id}` : "/admin/leads");
       router.refresh();
     } catch {
       toast.error("Something went wrong");
@@ -80,8 +88,10 @@ export function LeadForm() {
   return (
     <Card className="max-w-2xl">
       <CardHeader>
-        <CardTitle>New Lead</CardTitle>
-        <CardDescription>Add a new lead to your pipeline.</CardDescription>
+        <CardTitle>{isEdit ? "Edit Lead" : "New Lead"}</CardTitle>
+        <CardDescription>
+          {isEdit ? "Update lead details." : "Add a new lead to your pipeline."}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -120,7 +130,14 @@ export function LeadForm() {
                   <FormItem>
                     <FormLabel>Value (₹)</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="50000" {...field} value={field.value ?? ""} onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)} />
+                      <Input
+                        type="number"
+                        placeholder="50000"
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(e.target.value ? Number(e.target.value) : undefined)
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -195,7 +212,7 @@ export function LeadForm() {
             </div>
             <div className="flex gap-2">
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                Create Lead
+                {isEdit ? "Save Changes" : "Create Lead"}
               </Button>
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel

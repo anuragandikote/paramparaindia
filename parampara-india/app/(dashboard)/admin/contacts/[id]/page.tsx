@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { contactService } from "@/services/contact.service";
 import { PageHeader } from "@/components/common/page-header";
+import { EntityActions } from "@/components/common/entity-actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Phone, Building2, MapPin, FileText } from "lucide-react";
@@ -22,6 +23,13 @@ export default async function ContactDetailPage({
         <PageHeader
           title={`${contact.firstName} ${contact.lastName || ""}`}
           description={contact.company || undefined}
+          actions={
+            <EntityActions
+              editHref={`/admin/contacts/${id}/edit`}
+              deleteEndpoint={`/api/contacts/${id}`}
+              entityName="Contact"
+            />
+          }
         />
 
         <div className="grid gap-6 md:grid-cols-2">

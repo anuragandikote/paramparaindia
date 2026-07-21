@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -36,9 +35,14 @@ const contactSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
-export function ContactForm() {
+interface ContactFormProps {
+  id?: string;
+  defaultValues?: Partial<ContactFormData>;
+}
+
+export function ContactForm({ id, defaultValues }: ContactFormProps) {
   const router = useRouter();
-  const { data: session } = useSession();
+  const isEdit = !!id;
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
@@ -50,19 +54,22 @@ export function ContactForm() {
       company: "",
       address: "",
       notes: "",
+      ...defaultValues,
     },
   });
 
   async function onSubmit(data: ContactFormData) {
     try {
-      const res = await fetch("/api/contacts", {
-        method: "POST",
+      const url = isEdit ? `/api/contacts/${id}` : "/api/contacts";
+      const method = isEdit ? "PATCH" : "POST";
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error("Failed to create contact");
-      toast.success("Contact created");
-      router.push("/admin/contacts");
+      if (!res.ok) throw new Error("Failed");
+      toast.success(isEdit ? "Contact updated" : "Contact created");
+      router.push(isEdit ? `/admin/contacts/${id}` : "/admin/contacts");
       router.refresh();
     } catch {
       toast.error("Something went wrong");
@@ -72,8 +79,10 @@ export function ContactForm() {
   return (
     <Card className="max-w-2xl">
       <CardHeader>
-        <CardTitle>New Contact</CardTitle>
-        <CardDescription>Add a new contact to your CRM.</CardDescription>
+        <CardTitle>{isEdit ? "Edit Contact" : "New Contact"}</CardTitle>
+        <CardDescription>
+          {isEdit ? "Update contact details." : "Add a new contact to your CRM."}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -175,7 +184,7 @@ export function ContactForm() {
             />
             <div className="flex gap-2">
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                Create Contact
+                {isEdit ? "Save Changes" : "Create Contact"}
               </Button>
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel

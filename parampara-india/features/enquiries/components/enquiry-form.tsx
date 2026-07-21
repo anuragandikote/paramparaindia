@@ -38,12 +38,19 @@ const enquirySchema = z.object({
   subject: z.string().optional(),
   message: z.string().min(1, "Message is required"),
   type: z.enum(["GENERAL", "PRODUCT", "PRICING", "SUPPORT", "PARTNERSHIP", "OTHER"]),
+  status: z.enum(["PENDING", "IN_PROGRESS", "RESOLVED", "CLOSED"]).optional(),
 });
 
 type EnquiryFormData = z.infer<typeof enquirySchema>;
 
-export function EnquiryForm() {
+interface EnquiryFormProps {
+  id?: string;
+  defaultValues?: Partial<EnquiryFormData>;
+}
+
+export function EnquiryForm({ id, defaultValues }: EnquiryFormProps) {
   const router = useRouter();
+  const isEdit = !!id;
 
   const form = useForm<EnquiryFormData>({
     resolver: zodResolver(enquirySchema),
@@ -55,19 +62,23 @@ export function EnquiryForm() {
       subject: "",
       message: "",
       type: "GENERAL",
+      status: "PENDING",
+      ...defaultValues,
     },
   });
 
   async function onSubmit(data: EnquiryFormData) {
     try {
-      const res = await fetch("/api/enquiries", {
-        method: "POST",
+      const url = isEdit ? `/api/enquiries/${id}` : "/api/enquiries";
+      const method = isEdit ? "PATCH" : "POST";
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error("Failed to create enquiry");
-      toast.success("Enquiry created");
-      router.push("/admin/enquiries");
+      if (!res.ok) throw new Error("Failed");
+      toast.success(isEdit ? "Enquiry updated" : "Enquiry created");
+      router.push(isEdit ? `/admin/enquiries/${id}` : "/admin/enquiries");
       router.refresh();
     } catch {
       toast.error("Something went wrong");
@@ -77,8 +88,10 @@ export function EnquiryForm() {
   return (
     <Card className="max-w-2xl">
       <CardHeader>
-        <CardTitle>New Enquiry</CardTitle>
-        <CardDescription>Log a new customer enquiry.</CardDescription>
+        <CardTitle>{isEdit ? "Edit Enquiry" : "New Enquiry"}</CardTitle>
+        <CardDescription>
+          {isEdit ? "Update enquiry details." : "Log a new customer enquiry."}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -190,9 +203,34 @@ export function EnquiryForm() {
                 </FormItem>
               )}
             />
+            {isEdit && (
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="PENDING">Pending</SelectItem>
+                        <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                        <SelectItem value="RESOLVED">Resolved</SelectItem>
+                        <SelectItem value="CLOSED">Closed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <div className="flex gap-2">
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                Create Enquiry
+                {isEdit ? "Save Changes" : "Create Enquiry"}
               </Button>
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel
