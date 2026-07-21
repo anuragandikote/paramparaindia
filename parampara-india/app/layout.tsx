@@ -1,11 +1,8 @@
+import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import { Providers } from "@/components/common/providers";
 import "./globals.css";
-
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
-import FloatingVideo from "@/common/floatingVideo";
-import ChatBot from "@/common/chatbot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +14,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Parampara India | Wood Gasifier Stoves",
   description:
     "Parampara India manufactures high-efficiency commercial and industrial wood gasifier stoves for hotels, industries, temples, and large kitchens. Save up to 80% on LPG costs.",
@@ -30,9 +27,9 @@ export const metadata = {
   ],
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900`}
       >
@@ -64,10 +61,7 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              // Track page views on route changes
               let currentPath = window.location.pathname;
-              
-              // Observer for navigation changes (for SPA)
               const observer = new MutationObserver(() => {
                 if (window.location.pathname !== currentPath) {
                   currentPath = window.location.pathname;
@@ -79,7 +73,6 @@ export default function RootLayout({ children }) {
                   }
                 }
               });
-              
               observer.observe(document.body, { childList: true, subtree: true });
             `,
           }}
@@ -117,11 +110,7 @@ export default function RootLayout({ children }) {
             }),
           }}
         />
-        <FloatingVideo />
-        <ChatBot />
-        <Navbar />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
