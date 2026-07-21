@@ -1,20 +1,27 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { leadService } from "@/services/lead.service";
 import { PageHeader } from "@/components/common/page-header";
+import { SearchBar } from "@/components/common/search-bar";
+import { Pagination } from "@/components/common/pagination";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, IndianRupee } from "lucide-react";
 
 const statusColors: Record<string, string> = {
-  NEW: "bg-blue-100 text-blue-800",
-  CONTACTED: "bg-yellow-100 text-yellow-800",
-  QUALIFIED: "bg-purple-100 text-purple-800",
-  PROPOSAL: "bg-indigo-100 text-indigo-800",
-  NEGOTIATION: "bg-orange-100 text-orange-800",
-  WON: "bg-green-100 text-green-800",
-  LOST: "bg-red-100 text-red-800",
+  NEW: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+  CONTACTED:
+    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+  QUALIFIED:
+    "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+  PROPOSAL:
+    "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300",
+  NEGOTIATION:
+    "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
+  WON: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+  LOST: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
 };
 
 export default async function LeadsPage({
@@ -51,10 +58,16 @@ export default async function LeadsPage({
         }
       />
 
+      <Suspense>
+        <SearchBar placeholder="Search leads..." />
+      </Suspense>
+
       {result.data.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-muted-foreground">No leads yet.</p>
+            <p className="text-muted-foreground">
+              {search ? "No leads match your search." : "No leads yet."}
+            </p>
           </CardContent>
         </Card>
       ) : (
@@ -93,6 +106,10 @@ export default async function LeadsPage({
           ))}
         </div>
       )}
+
+      <Suspense>
+        <Pagination currentPage={page} totalPages={result.totalPages} />
+      </Suspense>
     </div>
   );
 }

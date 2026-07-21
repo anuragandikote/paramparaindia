@@ -1,16 +1,22 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { enquiryService } from "@/services/enquiry.service";
 import { PageHeader } from "@/components/common/page-header";
+import { SearchBar } from "@/components/common/search-bar";
+import { Pagination } from "@/components/common/pagination";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Clock } from "lucide-react";
 
 const statusColors: Record<string, string> = {
-  PENDING: "bg-yellow-100 text-yellow-800",
-  IN_PROGRESS: "bg-blue-100 text-blue-800",
-  RESOLVED: "bg-green-100 text-green-800",
-  CLOSED: "bg-gray-100 text-gray-800",
+  PENDING:
+    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+  IN_PROGRESS:
+    "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+  RESOLVED:
+    "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+  CLOSED: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
 };
 
 export default async function EnquiriesPage({
@@ -37,10 +43,16 @@ export default async function EnquiriesPage({
         description={`${result.total} total enquiries`}
       />
 
+      <Suspense>
+        <SearchBar placeholder="Search enquiries..." />
+      </Suspense>
+
       {result.data.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-muted-foreground">No enquiries yet.</p>
+            <p className="text-muted-foreground">
+              {search ? "No enquiries match your search." : "No enquiries yet."}
+            </p>
           </CardContent>
         </Card>
       ) : (
@@ -58,7 +70,9 @@ export default async function EnquiriesPage({
                       <Badge variant="outline">{enquiry.type}</Badge>
                     </div>
                     {enquiry.subject && (
-                      <p className="mt-1 text-sm text-muted-foreground">{enquiry.subject}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {enquiry.subject}
+                      </p>
                     )}
                     <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
                       {enquiry.message}
@@ -66,7 +80,7 @@ export default async function EnquiriesPage({
                   </div>
                   <div className="flex items-center gap-3 text-sm text-muted-foreground">
                     {enquiry.email && (
-                      <span className="flex items-center gap-1">
+                      <span className="hidden items-center gap-1 sm:flex">
                         <Mail className="h-3 w-3" />
                         {enquiry.email}
                       </span>
@@ -82,6 +96,10 @@ export default async function EnquiriesPage({
           ))}
         </div>
       )}
+
+      <Suspense>
+        <Pagination currentPage={page} totalPages={result.totalPages} />
+      </Suspense>
     </div>
   );
 }

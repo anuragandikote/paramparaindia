@@ -1,7 +1,10 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { contactService } from "@/services/contact.service";
 import { PageHeader } from "@/components/common/page-header";
+import { SearchBar } from "@/components/common/search-bar";
+import { Pagination } from "@/components/common/pagination";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -39,10 +42,16 @@ export default async function ContactsPage({
         }
       />
 
+      <Suspense>
+        <SearchBar placeholder="Search contacts..." />
+      </Suspense>
+
       {result.data.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-muted-foreground">No contacts yet.</p>
+            <p className="text-muted-foreground">
+              {search ? "No contacts match your search." : "No contacts yet."}
+            </p>
           </CardContent>
         </Card>
       ) : (
@@ -63,7 +72,9 @@ export default async function ContactsPage({
                         </p>
                       )}
                     </div>
-                    <Badge variant="secondary">{contact._count.leads} leads</Badge>
+                    <Badge variant="secondary">
+                      {contact._count.leads} leads
+                    </Badge>
                   </div>
                   <div className="mt-3 space-y-1">
                     {contact.email && (
@@ -85,6 +96,10 @@ export default async function ContactsPage({
           ))}
         </div>
       )}
+
+      <Suspense>
+        <Pagination currentPage={page} totalPages={result.totalPages} />
+      </Suspense>
     </div>
   );
 }
