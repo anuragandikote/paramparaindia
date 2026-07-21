@@ -1,12 +1,16 @@
-import { PageHeader } from "@/components/common/page-header";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const session = await auth();
+  if (!session) redirect("/login");
+
   return (
     <div className="space-y-6">
-      <PageHeader title="Dashboard" description="Welcome to the Parampara India CRM." />
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {/* Stats cards placeholder */}
-      </div>
+      <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+      <p className="text-muted-foreground">
+        Welcome back, {session.user?.name || "User"}. Here&apos;s your CRM overview.
+      </p>
     </div>
   );
 }

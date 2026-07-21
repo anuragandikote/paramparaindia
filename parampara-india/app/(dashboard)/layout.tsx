@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "CRM Dashboard | Parampara India",
-  description: "Parampara India CRM Administration Dashboard",
-};
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  if (!session) redirect("/login");
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
