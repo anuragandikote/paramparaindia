@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { Providers } from "@/components/common/providers";
+import {
+  ADDRESS,
+  CONTACT_EMAIL,
+  LPG_SAVINGS_CLAIM,
+  PHONES,
+  SITE_NAME,
+  SITE_URL,
+} from "@/data/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,7 +25,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Parampara India | Wood Gasifier Stoves",
   description:
-    "Parampara India manufactures high-efficiency commercial and industrial wood gasifier stoves for hotels, industries, temples, and large kitchens. Save up to 80% on LPG costs.",
+    `Parampara India manufactures high-efficiency commercial and industrial wood gasifier stoves for hotels, industries, temples, and large kitchens. ${LPG_SAVINGS_CLAIM}.`,
   keywords: [
     "wood gasifier stove",
     "commercial wood gasifier stove",
@@ -87,22 +95,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "Parampara India",
-              url: "https://paramparaindia.in",
-              logo: "https://paramparaindia.in/logo.png",
+              name: SITE_NAME,
+              url: SITE_URL,
+              logo: `${SITE_URL}/logo.png`,
+              email: CONTACT_EMAIL,
               description:
                 "Manufacturer of commercial and industrial wood gasifier stoves for hotels, industries, temples and large kitchens in India.",
               address: {
                 "@type": "PostalAddress",
-                addressLocality: "Bengaluru",
-                addressRegion: "KA",
-                addressCountry: "IN",
+                streetAddress: ADDRESS.streetAddress,
+                addressLocality: ADDRESS.locality,
+                addressRegion: ADDRESS.region,
+                postalCode: ADDRESS.postalCode,
+                addressCountry: ADDRESS.country,
               },
-              contactPoint: {
+              telephone: PHONES.map((phone) => phone.tel),
+              contactPoint: PHONES.map((phone) => ({
                 "@type": "ContactPoint",
-                telephone: "+91-7019713708",
+                telephone: phone.tel,
                 contactType: "Sales",
-              },
+                email: CONTACT_EMAIL,
+              })),
               sameAs: [
                 "https://www.instagram.com/indiaparampara",
                 "https://www.youtube.com/@BadukinaButthi",

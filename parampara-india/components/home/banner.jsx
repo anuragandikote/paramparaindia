@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
 import Marquee from "../ui/marquee";
+import { getWhatsAppLink } from "@/common/getWhatsappLink";
+import { LPG_SAVINGS_CLAIM } from "@/data/site";
+import { STARTING_PRICE_LABEL } from "@/data/products";
 
 export default function Banner() {
   return (
@@ -22,7 +25,10 @@ export default function Banner() {
           {/* USPs / Badges */}
           <ul className="flex gap-3 sm:gap-1 overflow-x-auto px-1 justify-start md:justify-start text-sm font-normal scrollbar-hide snap-x snap-mandatory">
             <li className="shrink-0 snap-center rounded-lg border border-gray-400 px-4 py-2 text-gray-900 font-bold">
-              Up to 80% LPG Cost Savings
+              {LPG_SAVINGS_CLAIM}
+            </li>
+            <li className="shrink-0 snap-center rounded-lg border border-gray-400 px-4 py-2 text-gray-900 font-bold">
+              {STARTING_PRICE_LABEL}
             </li>
             <li className="shrink-0 snap-center rounded-lg border border-gray-400 px-4 py-2 text-gray-900 font-bold">
               Clean-Combustion Wood Gasifier Technology
@@ -49,7 +55,7 @@ export default function Banner() {
             </Link>
 
             <a
-              href="https://wa.me/917019713708"
+              href={getWhatsAppLink({ page: "home" })}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-6 py-3 font-semibold text-white hover:bg-[#1EBE5D] transition-colors"

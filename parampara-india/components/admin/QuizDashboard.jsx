@@ -574,7 +574,7 @@ export default function QuizDashboard() {
                 <div className="mt-8 pt-6 border-t border-gray-200">
                   <div className="flex flex-col sm:flex-row gap-3 justify-end">
                     <button
-                      onClick={() => window.open(`https://wa.me/91${selectedLead.contact.phone.replace('+', '')}?text=Hi ${selectedLead.contact.name}, I'm following up on your stove quiz recommendation.`, '_blank')}
+                      onClick={() => window.open(`https://wa.me/91${selectedLead.contact.phone.replace('+', '')}?text=${encodeURIComponent(`Hi ${selectedLead.contact.name}, I'm following up on your stove quiz recommendation.`)}`, '_blank')}
                       className="inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
                     >
                       <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">

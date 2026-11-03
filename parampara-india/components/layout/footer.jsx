@@ -1,4 +1,12 @@
 import Link from "next/link";
+import { getWhatsAppLink } from "@/common/getWhatsappLink";
+import {
+  ADDRESS,
+  CONTACT_EMAIL,
+  LPG_SAVINGS_CLAIM,
+  PHONES,
+  WOOD_SAVINGS_CLAIM,
+} from "@/data/site";
 
 const FooterWaveBg = () => (
   <svg
@@ -42,9 +50,29 @@ export default function Footer() {
             <strong> domestic, commercial, and industrial cooking</strong> in India.
           </p>
           <p className="mt-2 font-normal">
-            📍 Karnataka, India<br />
-            📞 <a href="tel:+917019713708" className="hover:underline">+91 70197 13708</a><br />
-            ✉ <a href="mailto:info@paramparaindia.com" className="hover:underline">info@paramparaindia.com</a>
+            📍 {ADDRESS.line}
+            <br />
+            {PHONES.map((phone) => (
+              <span key={phone.tel}>
+                📞{" "}
+                <a href={`tel:${phone.tel}`} className="hover:underline">
+                  {phone.display}
+                </a>{" "}
+                <a
+                  href={getWhatsAppLink({ phone: phone.whatsapp, page: "contact" })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline"
+                >
+                  WhatsApp
+                </a>
+                <br />
+              </span>
+            ))}
+            ✉{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="hover:underline">
+              {CONTACT_EMAIL}
+            </a>
           </p>
         </div>
 
@@ -65,8 +93,8 @@ export default function Footer() {
         <div>
           <h3 className="font-semibold text-black">Why Choose Us</h3>
           <ul className="mt-2 space-y-1">
-            <li>✅ Save up to <strong>80% on LPG</strong></li>
-            <li>✅ Save up to <strong>50% on wood</strong></li>
+            <li>✅ <strong>{LPG_SAVINGS_CLAIM}</strong></li>
+            <li>✅ <strong>{WOOD_SAVINGS_CLAIM}</strong></li>
             <li>✅ Clean combustion with minimal smoke</li>
             <li>✅ Durable cast-iron build for long-term use</li>
             <li>✅ Trusted by hotels, temples, caterers & cloud kitchens</li>

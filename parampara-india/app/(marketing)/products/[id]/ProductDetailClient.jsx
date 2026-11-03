@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import SavingsCalculator from "@/components/home/savingsCalculator";
-import { getWhatsAppLink } from "@/common/getWhatsappLink";
+import { getWhatsAppLink, productInterestMessage } from "@/common/getWhatsappLink";
 import Breadcrumbs from "@/components/common/breadcrumbNavigator";
-import { useEffect, useState } from "react";
 import { trackProductView, trackCTAClick, trackWhatsappClick } from "@/lib/gtag";
+import { LPG_SAVINGS_CLAIM, PRIMARY_WHATSAPP_NUMBER, WARRANTY_AND_BLOWER_CARE } from "@/data/site";
 import React from "react";
 
 export default function ProductDetailClient({ product }) {
@@ -22,8 +22,11 @@ export default function ProductDetailClient({ product }) {
     }
   }, [product]);
 
+  const interestMessage = productInterestMessage(product.model ?? product.name);
+  const whatsappHref = getWhatsAppLink({ message: interestMessage });
+
   const handleWhatsAppClick = () => {
-    trackWhatsappClick('917019713708', `I'm interested in ${product.name}`, {
+    trackWhatsappClick(PRIMARY_WHATSAPP_NUMBER, interestMessage, {
       product_id: product.id,
       product_name: product.name,
       source: 'product_detail_page'
@@ -80,9 +83,7 @@ export default function ProductDetailClient({ product }) {
                     <p className="text-gray-300 mb-6">Request a demonstration video for this product</p>
                     <a
                       href={getWhatsAppLink({
-                        page: "products",
-                        model: product.name,
-                        message: "I would like to see a video demonstration of this product"
+                        message: `${interestMessage}. I would like to see a video demonstration.`,
                       })}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -117,6 +118,10 @@ export default function ProductDetailClient({ product }) {
                   <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 leading-tight">
                     {product.name}
                   </h1>
+
+                  {product.priceLabel && (
+                    <p className="text-2xl font-bold text-gray-900 mb-3">{product.priceLabel}</p>
+                  )}
                   
                   <p className="text-base text-gray-600 leading-relaxed mb-4">
                     {product.description}
@@ -191,11 +196,7 @@ export default function ProductDetailClient({ product }) {
                       <div>
                         <div className="text-sm font-bold text-gray-900">Capacity</div>
                         <div className="text-xs text-gray-600">
-                          {product.name.includes('W1') && "4-12 members"}
-                          {product.name.includes('W1A') && "4-18 members"}
-                          {(product.name.includes('W2') || product.name.includes('W3')) && "15-40 members"}
-                          {product.name.includes('W4') && "60-300 members"}
-                          {product.name.includes('W8') && "500-1000 members"}
+                          {product.capacityLabel}
                         </div>
                       </div>
                     </div>
@@ -257,7 +258,7 @@ export default function ProductDetailClient({ product }) {
                       </div>
                       <div>
                         <div className="text-sm font-semibold text-gray-900">Cost Effective</div>
-                        <div className="text-xs text-gray-600">Save up to 80% vs LPG</div>
+                        <div className="text-xs text-gray-600">{LPG_SAVINGS_CLAIM}</div>
                       </div>
                     </div>
                     <div className="flex items-start space-x-2">
@@ -287,13 +288,14 @@ export default function ProductDetailClient({ product }) {
               </div>
             </div>
 
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed text-gray-800">
+              {WARRANTY_AND_BLOWER_CARE}
+            </div>
+
             {/* CTA Buttons */}
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <a
-                href={getWhatsAppLink({
-                  page: "products",
-                  model: product.name,
-                })}
+                href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex flex-1 items-center justify-center rounded-full bg-linear-to-r from-green-500 to-green-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:from-green-600 hover:to-green-700"

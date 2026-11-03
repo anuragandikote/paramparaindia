@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getWhatsAppLink } from "@/common/getWhatsappLink";
 
 const steps = [
   {
@@ -37,12 +38,11 @@ export default function ChatBot() {
   const sendLead = async (data) => {
     try {
       const message = `📢 New Lead from Chatbot
-                          Name: ${data.name}
-                          Phone: ${data.phone}
-                          Interest: ${data.interest}`;
+Name: ${data.name}
+Phone: ${data.phone}
+Interest: ${data.interest}`;
 
-      const encodedMessage = encodeURIComponent(message);
-      const waLink = `https://wa.me/917019713708?text=${encodedMessage}`;
+      const waLink = getWhatsAppLink({ message });
 
       // Open WhatsApp in new tab for notification
       window.open(waLink, "_blank");

@@ -1,7 +1,10 @@
+import { ADDRESS } from "@/data/site";
+
 export default function GoogleMap() {
   return (
     <>
-    <div className="text-center text-2xl md:text-4xl font-semibold mb-5">Our Location</div>
+    <div className="text-center text-2xl md:text-4xl font-semibold mb-3">Our Location</div>
+    <p className="text-center text-gray-700 mb-5 px-4">{ADDRESS.line}</p>
     <div style={{ width: "100%", height: "400px" }}>
       <iframe
         title="Parampara India Location"

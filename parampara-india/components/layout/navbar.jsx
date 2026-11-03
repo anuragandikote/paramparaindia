@@ -4,15 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaWhatsapp } from "react-icons/fa";
 import { HiMenu, HiX, HiChevronDown } from "react-icons/hi";
-import { useEffect, useState, useCallback } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { getWhatsAppLink } from "@/common/getWhatsappLink";
+import { LPG_SAVINGS_CLAIM } from "@/data/site";
+
+const whatsappHref = getWhatsAppLink({ page: "home" });
 
 const primaryNav = [
     { label: "Products", href: "/products" },
     { label: "Stove Quiz", href: "/quiz" },
     { label: "Contact", href: "/contact" },
     { label: "How It Works", section: "how-it-works" },
-    { label: "Save 80%", section: "savings-calculator" },
+    { label: LPG_SAVINGS_CLAIM, section: "savings-calculator" },
 ];
 
 const resourceNav = [
@@ -25,45 +29,33 @@ export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [isClient, setIsClient] = useState(false);
 
     const pathname = usePathname();
-    const router = useRouter();
 
     useEffect(() => {
-        setIsClient(true);
         const onScroll = () => setScrolled(window.scrollY > 8);
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    const navigate = useCallback(
-        (item) => {
-            setMenuOpen(false);
-            setDropdownOpen(false);
+    const itemHref = (item) => item.href ?? `/#${item.section}`;
 
-            if (item.href) {
-                router.push(item.href);
-                return;
-            }
+    const handleNavClick = (event, item) => {
+        setMenuOpen(false);
+        setDropdownOpen(false);
 
-            if (pathname !== "/") {
-                router.push(`/#${item.section}`);
-                return;
-            }
+        if (!item.section || pathname !== "/") return;
 
-            const el = document.getElementById(item.section);
-            el?.scrollIntoView({ behavior: "smooth" });
-        },
-        [pathname, router]
-    );
+        event.preventDefault();
+        document.getElementById(item.section)?.scrollIntoView({ behavior: "smooth" });
+    };
 
     return (
         <>
             {/* HEADER */}
             <header
                 className={`sticky top-0 z-[100] transition-all duration-300
-        ${isClient && scrolled ? "bg-white/70 backdrop-blur shadow-sm" : "bg-white"}`}
+        ${scrolled ? "bg-white/70 backdrop-blur shadow-sm" : "bg-white"}`}
             >
                 <div className="container mx-auto h-16 flex items-center justify-between px-4">
 
@@ -82,13 +74,14 @@ export default function Navbar() {
                     {/* DESKTOP NAV */}
                     <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
                         {primaryNav.map((item) => (
-                            <button
+                            <Link
                                 key={item.label}
-                                onClick={() => navigate(item)}
+                                href={itemHref(item)}
+                                onClick={(event) => handleNavClick(event, item)}
                                 className="text-gray-700 hover:text-gray-900 relative after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-orange-500 hover:after:w-full transition-all cursor-pointer"
                             >
                                 {item.label}
-                            </button>
+                            </Link>
                         ))}
 
                         {/* DROPDOWN */}
@@ -125,18 +118,19 @@ export default function Navbar() {
     `}
                             >
                                 {resourceNav.map((item) => (
-                                    <button
+                                    <Link
                                         key={item.label}
-                                        onClick={() => navigate(item)}
+                                        href={itemHref(item)}
+                                        onClick={(event) => handleNavClick(event, item)}
                                         className="
-          w-full text-left px-4 py-3 text-sm cursor-pointer
+          block w-full text-left px-4 py-3 text-sm cursor-pointer
           text-gray-700 hover:text-gray-900
           hover:bg-orange-100/90
           transition
         "
                                     >
                                         {item.label}
-                                    </button>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -146,8 +140,9 @@ export default function Navbar() {
                     {/* RIGHT ACTIONS */}
                     <div className="flex items-center gap-3">
                         <a
-                            href="https://wa.me/917019713708"
+                            href={whatsappHref}
                             target="_blank"
+                            rel="noopener noreferrer"
                             className="hidden md:flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-2 text-white font-semibold hover:bg-[#1EBE5D]"
                         >
                             <FaWhatsapp /> Chat
@@ -198,9 +193,10 @@ export default function Navbar() {
                 {/* NAV ITEMS */}
                 <nav className="flex flex-col gap-1 px-4 py-4">
                     {primaryNav.map((item) => (
-                        <button
+                        <Link
                             key={item.label}
-                            onClick={() => navigate(item)}
+                            href={itemHref(item)}
+                            onClick={(event) => handleNavClick(event, item)}
                             className="
           rounded-lg px-4 py-3 text-left text-sm font-medium
           text-gray-700 hover:bg-gray-100
@@ -208,7 +204,7 @@ export default function Navbar() {
         "
                         >
                             {item.label}
-                        </button>
+                        </Link>
                     ))}
 
                     <div className="mt-3 border-t pt-3">
@@ -217,17 +213,18 @@ export default function Navbar() {
                         </span>
 
                         {resourceNav.map((item) => (
-                            <button
+                            <Link
                                 key={item.label}
-                                onClick={() => navigate(item)}
+                                href={itemHref(item)}
+                                onClick={(event) => handleNavClick(event, item)}
                                 className="
-            mt-1 w-full rounded-lg px-4 py-3 text-left text-sm
+            mt-1 block w-full rounded-lg px-4 py-3 text-left text-sm
             text-gray-700 hover:bg-gray-100
             transition
           "
                             >
                                 {item.label}
-                            </button>
+                            </Link>
                         ))}
                     </div>
                 </nav>
@@ -235,8 +232,9 @@ export default function Navbar() {
                 {/* BOTTOM WHATSAPP CTA */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-white/80 backdrop-blur">
                     <a
-                        href="https://wa.me/917019713708"
+                        href={whatsappHref}
                         target="_blank"
+                        rel="noopener noreferrer"
                         className="
         flex items-center justify-center gap-2
         w-full rounded-full

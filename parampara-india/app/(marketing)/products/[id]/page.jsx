@@ -1,12 +1,8 @@
-import Link from "next/link";
-import { products } from "@/data/products";
+import { notFound, permanentRedirect } from "next/navigation";
 import ProductDetailClient from "./ProductDetailClient";
-import Breadcrumbs from "@/components/common/breadcrumbNavigator";
-import SavingsCalculator from "@/components/home/savingsCalculator";
-import { getWhatsAppLink } from "@/common/getWhatsappLink";
-import React from "react";
+import { getProductBySlug, products } from "@/data/products";
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return products.map((product) => ({ id: product.id }));
@@ -14,7 +10,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const product = products.find((item) => item.id === id);
+  const product = getProductBySlug(id);
 
   if (!product) {
     return {
@@ -28,30 +24,16 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function ProductPage({ params }) {
-  const { id } = React.use(params);
-  const product = products.find((item) => item.id === id);
-  console.log({product})
+export default async function ProductPage({ params }) {
+  const { id } = await params;
+  const product = getProductBySlug(id);
 
   if (!product) {
-    return (
-      <section className="bg-[#faf7f2] py-16">
-        <div className="container mx-auto px-4 md:px-8">
-          <p className="text-sm uppercase tracking-[0.2em] text-orange-700">
-            Product not found
-          </p>
-          <h1 className="mt-3 text-3xl font-bold text-gray-900">
-            We couldn't find that stove.
-          </h1>
-          <Link
-            href="/products"
-            className="mt-6 inline-flex items-center text-orange-600 hover:text-orange-700 font-medium"
-          >
-            ← Back to Products
-          </Link>
-        </div>
-      </section>
-    );
+    notFound();
+  }
+
+  if (id !== product.id) {
+    permanentRedirect(`/products/${product.id}`);
   }
 
   return <ProductDetailClient product={product} />;

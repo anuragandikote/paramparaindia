@@ -1,16 +1,17 @@
 import Image from "next/image";
+import { LPG_SAVINGS_CLAIM } from "@/data/site";
 
 const industries = [
     {
         id: "home",
         name: "Homes",
-        description: "Efficient wood gasifier stoves for small to large-scale home kitchens, saving up to 80% on LPG.",
+        description: `Efficient wood gasifier stoves for small to large-scale home kitchens. ${LPG_SAVINGS_CLAIM}.`,
         icon: "/images/generic/home-kitchen.webp",
     },
     {
         id: "hotels",
         name: "Hotels",
-        description: "Efficient wood gasifier stoves for small to large-scale hotel kitchens, saving up to 80% on LPG.",
+        description: `Efficient wood gasifier stoves for small to large-scale hotel kitchens. ${LPG_SAVINGS_CLAIM}.`,
         icon: "/images/generic/hotel-kitchen.webp",
     },
     {

@@ -1,8 +1,10 @@
 "use client";
 
+import { LPG_SAVINGS_CLAIM } from "@/data/site";
+
 export default function Marquee() {
     const items = [
-        "🔥 Save up to 80% on LPG costs",
+        `🔥 ${LPG_SAVINGS_CLAIM}`,
         "🏭 Built for commercial kitchens",
         "♻️ Smokeless & eco-friendly combustion",
         "🧱 Heavy-duty cast iron build",

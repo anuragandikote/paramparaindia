@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getWhatsAppLink } from "@/common/getWhatsappLink";
 
 export async function POST(req) {
   try {
@@ -10,11 +11,7 @@ Name: ${name}
 Phone: ${phone}
 Interest: ${interest}`;
 
-    // 2️⃣ Encode message for URL
-    const encodedMessage = encodeURIComponent(message);
-
-    // 3️⃣ WhatsApp wa.me link
-    const waLink = `https://wa.me/917019713708?text=${encodedMessage}`;
+    const waLink = getWhatsAppLink({ message });
 
     console.log("WhatsApp link:", waLink); // for debugging
 

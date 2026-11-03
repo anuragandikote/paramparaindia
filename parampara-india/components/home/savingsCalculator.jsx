@@ -11,6 +11,7 @@ import {
     Cell,
 } from "recharts";
 import { getWhatsAppLink } from "@/common/getWhatsappLink";
+import { LPG_SAVINGS_CLAIM } from "@/data/site";
 
 export default function SavingsCalculatorGraph({
     sectionId = "savings-calculator",
@@ -119,7 +120,7 @@ export default function SavingsCalculatorGraph({
                             )}
 
                             <p className="mt-2 text-sm text-gray-300">
-                                Save up to <strong>80%</strong> compared to LPG
+                                <strong>{LPG_SAVINGS_CLAIM}</strong>
                             </p>
                         </div>
 

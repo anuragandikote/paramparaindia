@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { LPG_SAVINGS_CLAIM } from "@/data/site";
 
 // Temporary in-memory storage for debugging
 let leads = [];
@@ -173,7 +174,7 @@ async function sendEmailNotification(leadData) {
               <p><strong>Product:</strong> ${leadData.recommendation.productName}</p>
               <p><strong>Model:</strong> ${leadData.recommendation.productModel}</p>
               <p><strong>Capacity:</strong> ${leadData.recommendation.capacity}</p>
-              <p><strong>Savings:</strong> ${leadData.recommendation.savings}% on LPG</p>
+              <p><strong>Savings:</strong> ${LPG_SAVINGS_CLAIM}</p>
             </div>
             
             <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0;">

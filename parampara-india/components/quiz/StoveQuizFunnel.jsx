@@ -3,6 +3,20 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getWhatsAppLink } from "@/common/getWhatsappLink";
+import { getProductByModel } from "@/data/products";
+import { LPG_SAVINGS_CLAIM } from "@/data/site";
+
+const recommend = (model, reason) => {
+  const product = getProductByModel(model);
+  return {
+    model: product.model,
+    name: product.name,
+    capacity: product.capacityLabel,
+    reason,
+    savings: 80,
+    price: product.priceLabel,
+  };
+};
 
 // Quiz data and logic
 const quizQuestions = [
@@ -77,99 +91,41 @@ const quizQuestions = [
   }
 ];
 
-// Stove recommendation logic
 const getStoveRecommendation = (answers) => {
   const peopleCount = answers[1];
   const kitchenType = answers[2];
-  const cookingHours = answers[3];
-  const lpgExpense = answers[4];
-  const cookingType = answers[5];
 
-  // Decision tree logic
-  if (peopleCount === "1-4" || peopleCount === "5-12") {
-    if (peopleCount === "5-12" && (kitchenType === "hotel" || kitchenType === "catering")) {
-      return {
-        model: "W1A",
-        name: "W1A Wood Gasifier Stove",
-        capacity: "4-18 members",
-        reason: "Perfect upgrade from W1 for small commercial use",
-        savings: 80,
-        price: "₹12,000"
-      };
+  if (peopleCount === "1-4") {
+    return recommend("W1", "Ideal for domestic cooking and small families");
+  }
+
+  if (peopleCount === "5-12") {
+    if (kitchenType === "hotel" || kitchenType === "catering") {
+      return recommend("W1A", "Perfect upgrade from W1 for small commercial use");
     }
-    return {
-      model: "W1",
-      name: "W1 Wood Gasifier Stove",
-      capacity: "4-12 members",
-      reason: "Ideal for domestic cooking and small families",
-      savings: 80,
-      price: "₹9,000"
-    };
+    return recommend("W1", "Ideal for domestic cooking and small families");
   }
 
   if (peopleCount === "13-25") {
-    return {
-      model: "W1A",
-      name: "W1A Wood Gasifier Stove",
-      capacity: "4-18 members",
-      reason: "Perfect for larger families and small commercial setups",
-      savings: 80,
-      price: "₹12,000"
-    };
+    return recommend("W2", "Ideal for hotels, tea shops, and small-scale industries");
   }
 
   if (peopleCount === "26-60") {
     if (kitchenType === "tea-shop") {
-      return {
-        model: "W2",
-        name: "W2 Wood Gasifier Stove",
-        capacity: "15-40 members",
-        reason: "Designed specifically for tea shops and small hotels",
-        savings: 75,
-        price: "₹15,000"
-      };
+      return recommend("W3", "Designed specifically for tea shops and small hotels");
     }
-    return {
-      model: "W3",
-      name: "W3 Wood Gasifier Stove",
-      capacity: "25-60 members",
-      reason: "Great for medium-sized commercial kitchens",
-      savings: 75,
-      price: "₹18,000"
-    };
+    return recommend("W3", "Great for medium-sized commercial kitchens");
   }
 
   if (peopleCount === "61-300") {
-    return {
-      model: "W4",
-      name: "W4 Wood Gasifier Stove",
-      capacity: "60-300 members",
-      reason: "Perfect for hotels, hostels, and temples",
-      savings: 80,
-      price: "₹25,000"
-    };
+    return recommend("W4", "Perfect for hotels, hostels, and temples");
   }
 
   if (peopleCount === "300+") {
-    return {
-      model: "W8",
-      name: "W8 Wood Gasifier Stove",
-      capacity: "500-1000 members",
-      reason: "Industrial-grade for large-scale cooking operations",
-      savings: 80,
-      price: "₹45,000"
-    };
+    return recommend("W8", "Industrial-grade for large-scale cooking operations");
   }
 
-  // Default fallback
-  return {
-    model: "W2",
-    name: "W2 Wood Gasifier Stove",
-    capacity: "15-40 members",
-    reason: "Versatile option for various commercial needs",
-    savings: 75,
-    price: "₹15,000"
-  };
+  return recommend("W2", "Versatile option for various commercial needs");
 };
 
 // Calculate savings
@@ -299,7 +255,7 @@ Current LPG expense: ${answers[4]}`;
                     {recommendation.capacity}
                   </span>
                   <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
-                    Save {recommendation.savings}% on LPG
+                    {LPG_SAVINGS_CLAIM}
                   </span>
                 </div>
                 <p className="text-gray-600 mb-6">{recommendation.reason}</p>
@@ -500,7 +456,7 @@ Current LPG expense: ${answers[4]}`;
                       {recommendation.capacity}
                     </span>
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
-                      Save {recommendation.savings}% on LPG
+                      {LPG_SAVINGS_CLAIM}
                     </span>
                   </div>
                   <p className="text-gray-600 mb-6">{recommendation.reason}</p>

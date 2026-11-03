@@ -1,4 +1,5 @@
 import Breadcrumbs from "@/components/common/breadcrumbNavigator";
+import { LPG_SAVINGS_CLAIM } from "@/data/site";
 
 export const metadata = {
   title: "FAQ | Parampara India",
@@ -15,7 +16,7 @@ const faqs = [
   {
     question: "How much can I save compared to LPG?",
     answer:
-      "Most kitchens save up to 80% on monthly fuel spend when switching from LPG to a Parampara wood gasifier stove, depending on usage and fuel costs.",
+      `${LPG_SAVINGS_CLAIM} for most kitchens switching from LPG to a Parampara wood gasifier stove, depending on usage and fuel costs.`,
   },
   {
     question: "Which model should I choose?",

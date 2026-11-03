@@ -2,6 +2,21 @@
 
 import React, { useState } from "react";
 import ProductCard from "@/components/common/productCard";
+import { getWhatsAppLink } from "@/common/getWhatsappLink";
+import { getProductByModel } from "@/data/products";
+import { LPG_SAVINGS_CLAIM } from "@/data/site";
+
+const recommend = (model, reason) => {
+  const product = getProductByModel(model);
+  return {
+    model: product.model,
+    name: product.name,
+    capacity: product.capacityLabel,
+    price: product.priceLabel,
+    reason,
+    savings: 80,
+  };
+};
 
 // Quiz data and logic
 const quizQuestions = [
@@ -76,131 +91,55 @@ const quizQuestions = [
   }
 ];
 
-// Stove recommendation logic
+// Stove recommendation logic. Answers are keyed by question id (1 = people, 2 = kitchen).
 const getStoveRecommendation = (answers) => {
-  const peopleCount = answers[2];
-  const kitchenType = answers[3];
-  const cookingHours = answers[4];
-  const lpgExpense = answers[5];
-  const cookingType = answers[6];
+  const peopleCount = answers[1];
+  const kitchenType = answers[2];
 
-  // Decision tree logic
-  if (peopleCount === "1-4" || peopleCount === "5-12") {
-    if (peopleCount === "5-12" && (kitchenType === "hotel" || kitchenType === "catering")) {
-      return {
-        model: "W1A",
-        name: "W1A Wood Gasifier Stove",
-        capacity: "4-18 members",
-        reason: "Perfect upgrade from W1 for small commercial use",
-        savings: 80,
-      };
+  if (peopleCount === "1-4") {
+    return recommend("W1", "Ideal for domestic cooking and small families");
+  }
+
+  if (peopleCount === "5-12") {
+    if (kitchenType === "hotel" || kitchenType === "catering") {
+      return recommend("W1A", "Perfect upgrade from W1 for small commercial use");
     }
-    return {
-      model: "W1",
-      name: "W1 Wood Gasifier Stove",
-      capacity: "4-12 members",
-      reason: "Ideal for domestic cooking and small families",
-      savings: 80,
-    };
+    return recommend("W1", "Ideal for domestic cooking and small families");
   }
 
   if (peopleCount === "13-25") {
-    return {
-      model: "W1A",
-      name: "W1A Wood Gasifier Stove",
-      capacity: "4-18 members",
-      reason: "Perfect for larger families and small commercial setups",
-      savings: 80,
-    };
+    return recommend("W2", "Ideal for hotels, tea shops, and small-scale industries");
   }
 
   if (peopleCount === "26-60") {
     if (kitchenType === "tea-shop") {
-      return {
-        model: "W2",
-        name: "W2 Wood Gasifier Stove",
-        capacity: "15-40 members",
-        reason: "Designed specifically for tea shops and small hotels",
-        savings: 80,
-      };
+      return recommend("W3", "Designed specifically for tea shops and small hotels");
     }
-    return {
-      model: "W3",
-      name: "W3 Wood Gasifier Stove",
-      capacity: "25-60 members",
-      reason: "Great for medium-sized commercial kitchens",
-      savings: 80,
-    };
+    return recommend("W3", "Great for medium-sized commercial kitchens");
   }
 
   if (peopleCount === "61-300") {
-    return {
-      model: "W4",
-      name: "W4 Wood Gasifier Stove",
-      capacity: "60-300 members",
-      reason: "Perfect for hotels, hostels, and temples",
-      savings: 80,
-    };
+    return recommend("W4", "Perfect for hotels, hostels, and temples");
   }
 
   if (peopleCount === "300+") {
-    return {
-      model: "W8",
-      name: "W8 Wood Gasifier Stove",
-      capacity: "500-1000 members",
-      reason: "Industrial-grade for large-scale cooking operations",
-      savings: 80,
-    };
+    return recommend("W8", "Industrial-grade for large-scale cooking operations");
   }
 
-  // Default fallback
-  return {
-    model: "W2",
-    name: "W2 Wood Gasifier Stove",
-    capacity: "15-40 members",
-    reason: "Versatile option for various commercial needs",
-    savings: 80,
-  };
+  return recommend("W2", "Versatile option for various commercial needs");
 };
 
-// Calculate savings
-const calculateSavings = (lpgExpense, savingsPercentage, kitchenType) => {
-  // Determine actual LPG cost based on kitchen type
-  const domesticCost = 850;  // per cylinder
-  const commercialCost = 2500; // per cylinder
-  
-  // Use actual costs for calculation
-  const actualCost = (kitchenType === "home" || kitchenType === "hostel" || kitchenType === "cloud-kitchen") 
-    ? domesticCost 
-    : commercialCost;
-  
-  // lpgExpense is already a number from handleLeadSubmit
+const calculateSavings = (lpgExpense, savingsPercentage, model) => {
   const monthlyExpense = lpgExpense;
-  
-  // Calculate savings
   const monthlySavings = (monthlyExpense * savingsPercentage) / 100;
   const yearlySavings = monthlySavings * 12;
-  
-  // Use realistic stove prices based on model
-  const stovePrices = {
-    'W1': 9000,
-    'W1A': 12000,
-    'W2': 15000,
-    'W3': 18000,
-    'W4': 25000,
-    'W8': 45000
-  };
-  
-  // Get stove price from recommendation or use default
-  const stovePrice = 15000; // Default fallback
-  
-  // Calculate payback period
+  const stovePrice = getProductByModel(model)?.price ?? 6000;
   const paybackMonths = monthlySavings > 0 ? stovePrice / monthlySavings : 0;
 
   return {
     monthly: Math.round(monthlySavings),
     yearly: Math.round(yearlySavings),
-    payback: Math.max(1, Math.ceil(paybackMonths)) // Minimum 1 month
+    payback: Math.max(1, Math.ceil(paybackMonths)),
   };
 };
 
@@ -215,9 +154,6 @@ export default function QuizWrapper() {
   const [progress, setProgress] = useState(0);
 
   // YouTube Embed URL conversion for Shorts
-  const videoId = "dummy";
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}`;
-
   React.useEffect(() => {
     setProgress((currentQuestion / quizQuestions.length) * 100);
   }, [currentQuestion]);
@@ -252,8 +188,8 @@ export default function QuizWrapper() {
     
     // Generate recommendation
     const rec = getStoveRecommendation(answers);
-    const kitchenType = answers[3]; // Get kitchen type from answers
-    const lpgExpenseRaw = answers[4]; // Get raw LPG expense string
+    const kitchenType = answers[2];
+    const lpgExpenseRaw = answers[4];
     
     // Parse LPG expense properly
     let lpgExpense;
@@ -266,7 +202,7 @@ export default function QuizWrapper() {
       lpgExpense = (parseInt(range[0]) + parseInt(range[1])) / 2;
     }
     
-    const sav = calculateSavings(lpgExpense, rec.savings, kitchenType);
+    const sav = calculateSavings(lpgExpense, rec.savings, rec.model);
 
     // Store all quiz data
     const quizData = {
@@ -395,7 +331,7 @@ Current LPG expense: ${answers[4]}`;
                       {recommendation.capacity}
                     </span>
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
-                      Save {recommendation.savings}% on LPG
+                      {LPG_SAVINGS_CLAIM}
                     </span>
                   </div>
                   <p className="text-gray-600 mb-6">{recommendation.reason}</p>
@@ -424,18 +360,8 @@ Current LPG expense: ${answers[4]}`;
 
                 {/* Product Card - Same size as products page */}
                 <div className="flex items-center">
-                  <ProductCard 
-                    product={{
-                      id: recommendation.model.toLowerCase(),
-                      name: recommendation.name,
-                      description: `${recommendation.capacity}. ${recommendation.reason}`,
-                      image: `/images/products/${recommendation.model}.webp`,
-                      video: "/videos/all-in-one-english.mp4",
-                      cta: `/products/${recommendation.model.toLowerCase()}`,
-                      savings: `Save ${recommendation.savings}% on LPG`,
-                      ytShorts: 'k-e1-w9Bvdw',
-                      category: recommendation.model === 'W1' || recommendation.model === 'W1A' ? ['domestic'] : ['domestic', 'commercial']
-                    }}
+                  <ProductCard
+                    product={getProductByModel(recommendation.model)}
                     priority={true}
                   />
                 </div>
@@ -445,7 +371,7 @@ Current LPG expense: ${answers[4]}`;
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href={`https://wa.me/917019713708?text=${encodeURIComponent(getWhatsAppMessage())}`}
+                href={getWhatsAppLink({ message: getWhatsAppMessage() })}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-full hover:shadow-lg transition-all duration-200"

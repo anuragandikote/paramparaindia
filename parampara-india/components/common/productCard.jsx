@@ -3,7 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { trackProductView, trackProductClick, trackCTAClick, trackWhatsappClick } from "@/lib/gtag";
+import { trackProductView, trackProductClick, trackWhatsappClick } from "@/lib/gtag";
+import { getWhatsAppLink, productInterestMessage } from "@/common/getWhatsappLink";
+import { LPG_SAVINGS_CLAIM, PRIMARY_WHATSAPP_NUMBER } from "@/data/site";
 
 export default function ProductCard({ product, priority, listIndex = 0 }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -17,29 +19,27 @@ export default function ProductCard({ product, priority, listIndex = 0 }) {
     trackProductClick(product, 'Product List', listIndex);
   };
 
-  const handleExploreClick = (e) => {
-    e.stopPropagation();
-    trackCTAClick('explore_product', `/products/${product.id}`, { 
-      product_id: product.id,
-      product_name: product.name 
-    });
-  };
+  const interestMessage = productInterestMessage(product.model ?? product.name);
+  const whatsappHref = getWhatsAppLink({ message: interestMessage });
 
   const handleWhatsappClick = (e) => {
     e.stopPropagation();
-    const message = `I'm interested in ${product.name}`;
-    trackWhatsappClick('917019713708', message, { 
+    trackWhatsappClick(PRIMARY_WHATSAPP_NUMBER, interestMessage, { 
       product_id: product.id,
       product_name: product.name 
     });
   };
 
   return (
-    <Link 
-      href={`/products/${product.id}`}
-      className="block group rounded-3xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
-      onClick={handleProductClick}
+    <article
+      className="relative block group rounded-3xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
     >
+      <Link
+        href={`/products/${product.id}`}
+        aria-label={`Explore ${product.name}`}
+        className="absolute inset-0 z-10"
+        onClick={handleProductClick}
+      />
 
       {/* Premium gradient overlay */}
       <div className="absolute inset-0 z-0 bg-linear-to-br from-orange-50 via-transparent to-amber-50 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -100,6 +100,12 @@ export default function ProductCard({ product, priority, listIndex = 0 }) {
           <h3 className="text-xl md:text-2xl font-bold bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-2">
             {product.name}
           </h3>
+          {product.priceLabel && (
+            <p className="text-lg font-bold text-gray-900">{product.priceLabel}</p>
+          )}
+          {product.capacityLabel && (
+            <p className="mt-1 text-sm font-medium text-gray-600">{product.capacityLabel}</p>
+          )}
           <div className="flex items-center space-x-2">
             <div className="flex-1 h-px bg-linear-to-r from-orange-200 to-transparent"></div>
             <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
@@ -131,8 +137,8 @@ export default function ProductCard({ product, priority, listIndex = 0 }) {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd"/>
               </svg>
             </div>
-            <div className="text-xs text-green-600 font-medium text-center">Save</div>
-            <div className="text-xs font-bold text-green-800 text-center">80%</div>
+            <div className="text-xs text-green-600 font-medium text-center">LPG</div>
+            <div className="text-[11px] font-bold leading-tight text-green-800 text-center">{LPG_SAVINGS_CLAIM}</div>
           </div>
 
           <div className="bg-linear-to-br from-blue-50 to-blue-100 rounded-2xl p-3 border border-blue-200/50">
@@ -160,16 +166,16 @@ export default function ProductCard({ product, priority, listIndex = 0 }) {
         <div className="flex gap-3">
           <div
             className="flex-1 bg-linear-to-r from-orange-500 via-orange-600 to-orange-700 text-white rounded-2xl px-6 py-3.5 text-sm font-bold text-center shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:from-orange-600 hover:via-orange-700 hover:to-orange-800 active:scale-95 border border-orange-400/50 cursor-pointer"
-            onClick={handleExploreClick}
           >
             Explore Product
           </div>
           
           <a
-            href={`https://wa.me/919876543210?text=I'm interested in ${product.name}`}
+            href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="md:hidden bg-linear-to-r from-green-500 to-green-600 text-white rounded-2xl px-4 py-3.5 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:from-green-600 hover:to-green-700 active:scale-95 border border-green-400/50"
+            aria-label={interestMessage}
+            className="relative z-20 md:hidden bg-linear-to-r from-green-500 to-green-600 text-white rounded-2xl px-4 py-3.5 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:from-green-600 hover:to-green-700 active:scale-95 border border-green-400/50"
             onClick={handleWhatsappClick}
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -178,6 +184,6 @@ export default function ProductCard({ product, priority, listIndex = 0 }) {
           </a>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

@@ -1,24 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { getWhatsAppLink } from "@/common/getWhatsappLink";
+import { allProducts, recommendProduct } from "@/data/products";
+
+const minPeople = Math.min(...allProducts.map((product) => product.capacityMin));
+const maxPeople = Math.max(...allProducts.map((product) => product.capacityMax));
 
 export default function StoveModelSelector() {
     const [people, setPeople] = useState(50);
 
-    const stoveModels = [
-        { model: "W1", min: 2, max: 12, use: "Homes, Small Families" },
-        { model: "W2", min: 13, max: 25, use: "Tea Shops, Small Hotels, PGs" },
-        { model: "W3", min: 26, max: 49, use: "Tea Shops, Small Hotels, PGs" },
-        { model: "W4", min: 50, max: 300, use: "Medium Hotels, Hostels, Temples" },
-        { model: "W8", min: 301, max: 1000, use: "Mid-Day Meals, Industrial Kitchens" },
-    ];
-
-    const selectedModel =
-        stoveModels.find(
-            (model) => people >= model.min && people <= model.max
-        ) || stoveModels[0];
+    const selectedModel = recommendProduct(people, allProducts);
 
     return (
         <section id="compare" className="py-20 bg-white">
@@ -47,8 +39,8 @@ export default function StoveModelSelector() {
 
                         <input
                             type="range"
-                            min={4}
-                            max={1000}
+                            min={minPeople}
+                            max={maxPeople}
                             step={1}
                             value={people}
                             onChange={(e) => setPeople(Number(e.target.value))}
@@ -71,17 +63,21 @@ export default function StoveModelSelector() {
                         </p>
 
                         <p className="mt-5 text-gray-200 text-sm md:text-lg">
-                            Ideal for cooking for
+                            Ideal for
                             <br />
                             <strong className="text-white">
-                                {selectedModel.min} – {selectedModel.max} people
+                                {selectedModel.capacityLabel}
                             </strong>
+                        </p>
+
+                        <p className="mt-3 text-lg font-semibold text-white">
+                            {selectedModel.priceLabel}
                         </p>
 
                         <p className="mt-3 text-sm text-gray-200">
                             Best suited for: <br/> 
                             <strong className="text-white">
-                                {selectedModel.use}
+                                {selectedModel.suitableFor}
                             </strong>
                         </p>
 

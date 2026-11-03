@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { getWhatsAppLink } from "@/common/getWhatsappLink";
+import { ADDRESS, CONTACT_EMAIL, PHONES } from "@/data/site";
 
 export default function ContactPage() {
   const [formState, setFormState] = useState<
@@ -62,10 +64,35 @@ export default function ContactPage() {
     <section className="section py-20">
       <div className="container mx-auto max-w-lg px-4">
         <h1 className="mb-2 text-3xl font-bold text-gray-900">Contact Us</h1>
-        <p className="mb-8 text-gray-600">
+        <p className="mb-6 text-gray-600">
           Have a question? Fill out the form below and we&apos;ll get back to
           you.
         </p>
+
+        <div className="mb-8 space-y-2 text-sm text-gray-700">
+          <p>{ADDRESS.line}</p>
+          {PHONES.map((phone) => (
+            <p key={phone.tel}>
+              <a href={`tel:${phone.tel}`} className="hover:underline">
+                {phone.display}
+              </a>
+              {" · "}
+              <a
+                href={getWhatsAppLink({ phone: phone.whatsapp, page: "contact" })}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                WhatsApp
+              </a>
+            </p>
+          ))}
+          <p>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="hover:underline">
+              {CONTACT_EMAIL}
+            </a>
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">

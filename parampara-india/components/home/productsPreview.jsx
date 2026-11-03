@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from "react";
-import { products } from "@/data/products";
+import { products, STARTING_PRICE_LABEL } from "@/data/products";
 import ProductCard from "../common/productCard";
 import { trackSocialClick } from "@/lib/gtag";
 
@@ -66,6 +66,9 @@ export default function ProductsPreview() {
                 </h2>
                 <p className="mt-4 text-center text-gray-700 max-w-2xl mx-auto">
                     Explore our range of energy-efficient and durable wood gasifier stoves.
+                </p>
+                <p className="mt-3 text-center text-lg font-semibold text-gray-900">
+                    {STARTING_PRICE_LABEL}
                 </p>
 
                 {/* Products Grid */}
