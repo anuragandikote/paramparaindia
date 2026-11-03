@@ -2,6 +2,7 @@
 
 import GoogleMap from "@/common/googleMaps";
 import Banner from "@/components/home/banner";
+import DiwaliBanner from "@/components/home/diwaliBanner";
 import HowItWorks from "@/components/home/howItWorks";
 import IndustriesSection from "@/components/home/industriesSection";
 import ProductsPreview from "@/components/home/productsPreview";
@@ -23,6 +24,7 @@ export default function HomePage() {
 
   return (
     <section className="section">
+      <DiwaliBanner />
       <Banner />
       <ProductsPreview />
       <GoogleMap />
