@@ -37,6 +37,25 @@ export const ADDRESS = {
 
 export const LPG_SAVINGS_CLAIM = "Up to 80% LPG savings";
 
+/**
+ * Diwali offer copy and the instant it stops showing.
+ * `endsAt` is the last moment of 31 December 2026 in Asia/Kolkata.
+ * The homepage banner hides once that instant has passed.
+ */
+export const DIWALI_OFFER = {
+  label: "Diwali offer",
+  headline: "Up to 10% off",
+  validTill: "valid till 31 December 2026",
+  greeting: "ದೀಪಾವಳಿ ಶುಭಾಶಯಗಳು",
+  endsAt: "2026-12-31T23:59:59.999+05:30",
+  whatsappMessage:
+    "Hi, I'm interested in the Diwali offer: Up to 10% off, valid till 31 December 2026.",
+} as const;
+
+export function isDiwaliOfferActive(now: Date = new Date()) {
+  return now.getTime() <= Date.parse(DIWALI_OFFER.endsAt);
+}
+
 export const WOOD_SAVINGS_CLAIM = "Save up to 50% on wood";
 
 export const WARRANTY_AND_BLOWER_CARE =
